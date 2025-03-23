@@ -1,10 +1,12 @@
 import pyautogui
+from imutils.object_detection import non_max_suppression
 import pytesseract
 import cv2
 import numpy
 import mss
 import os
 import time
+import random
 
 class Automator:
     def __init__(self, scale = 1, threshold = 0.052, kill_file = os.path.expanduser("~/.tba_stop")):
@@ -17,6 +19,7 @@ class Automator:
         self.samples = dict()
         self.image = None
         self.loc = None
+        self.multi = None
 
     def get_sample(self, name):
         t = (name, self.scale)
@@ -27,9 +30,10 @@ class Automator:
         self.samples[t] = sample
         return sample
 
-    def find(self, sample, threshold = None):
+    def find(self, sample, threshold = None, set_loc = True):
         template = self.get_sample(sample)
-        self.loc = None
+        if set_loc:
+            self.loc = None
         result = cv2.matchTemplate(self.image, template, self.method)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
         if threshold is None:
@@ -42,7 +46,55 @@ class Automator:
             loc = max_loc
         if condition:
             h, w, _ = template.shape
-            self.loc = ((loc[0] + w / 2) / self.scale, (loc[1] + h / 2) / self.scale)
+            loc = ((loc[0] + w / 2) / self.scale, (loc[1] + h / 2) / self.scale)
+            if set_loc:
+                self.loc = loc
+            return loc
+        return None
+
+    def find_multi(self, sample, threshold = None):
+        template = self.get_sample(sample)
+        self.multi = None
+        result = cv2.matchTemplate(self.image, template, self.method)
+        if threshold is None:
+            threshold = self.threshold
+        if self.method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
+            ys, xs = numpy.where(result < threshold)
+        else:
+            ys, xs = numpy.where(result > threshold)
+        rects = []
+        for x, y in zip(xs, ys):
+            rects.append((x, y, x + template.shape[:2][1], y + template.shape[:2][0]))
+        h, w, _ = template.shape
+        self.multi = [((loc[0] + w / 2) / self.scale, (loc[1] + h / 2) / self.scale) for loc in non_max_suppression(numpy.array(rects))]
+        if self.multi:
+            return self.multi
+        return None
+
+    def multi_block_color(self, width, height, color):
+        multi = []
+        for loc in self.multi:
+            min_x = loc[0] - width // 2
+            max_x = loc[0] + (width + 1) // 2
+            min_y = loc[1] - height // 2
+            max_y = loc[1] + (height + 1) // 2
+            cutout = self.image[int(min_y):int(max_y), int(min_x):int(max_x)]
+            keep = True
+            for row in cutout:
+                for pixel in row:
+                    if (int(pixel[2]), int(pixel[1]), int(pixel[0])) == color:
+                        keep = False
+                        break
+                if not keep:
+                    break
+            if keep:
+                multi.append(loc)
+        self.multi = multi
+        return bool(self.multi)
+
+    def random_multi(self):
+        if self.multi:
+            self.loc = random.choice(self.multi)
             return self.loc
         return None
 
@@ -99,6 +151,17 @@ class Automator:
                 loc = a.find(sample)
                 if loc is not None:
                     return loc
+            return None
+        return self.loop(f, timeout)
+
+    def await_samples_multi(self, samples, timeout = None):
+        if not isinstance(samples, list):
+            samples = [samples]
+        def f(a):
+            for sample in samples:
+                locs = a.find_multi(sample)
+                if locs is not None:
+                    return locs
             return None
         return self.loop(f, timeout)
 
