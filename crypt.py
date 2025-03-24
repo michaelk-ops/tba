@@ -32,17 +32,18 @@ def crypt(a):
     if not a.await_samples("explore", 2):
         return False
     a.click(0, 10)
-    time.sleep(1.2)
+    if not a.await_samples("carter_march", 2):
+        return False
     return True
 
 def speedup(a):
     if a.await_samples("carter_march", 2):
-        if not a.find("speedup", set_loc = False):
-            a.click(190, 8)
-        if not a.find("speedup"):
-            continue
+        a.click(190, 8)
+        if not a.await_samples("speedup", 2):
+            return True
         for _ in range(6):
             a.click(360, 36)
+        time.sleep(2)
         return True
     return False
 
@@ -50,15 +51,11 @@ a = Automator()
 fails = 0
 last_restart = time.time()
 while True:
-    if fails >= 8 or time.time() > last_restart + 900:
+    if fails >= 10 or time.time() > last_restart + 900:
         a.restart_game(True)
         last_restart = time.time()
         fails = 0
-    if speedup(a):
-        fails = 0
-        time.sleep(2)
-        continue
-    else:
+    if not speedup(a):
         if crypt(a):
             fails = 0
         else:
