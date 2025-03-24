@@ -6,6 +6,7 @@ import numpy
 import mss
 import os
 import time
+import math
 import random
 
 class Automator:
@@ -97,6 +98,18 @@ class Automator:
             self.loc = random.choice(self.multi)
             return self.loc
         return None
+
+    def central_multi(self):
+        h, w, _ = self.image.shape
+        best_loc = None
+        best_dist = None
+        for loc in self.multi:
+            dist = math.sqrt((loc[0] / self.scale - w / 2) ** 2 + (loc[1] / self.scale - h / 2) ** 2)
+            if best_loc is None or dist < best_dist:
+                best_loc = loc
+                best_dist = dist
+        self.loc = best_loc
+        return best_loc
 
     def cut(self, min_x, min_y, max_x, max_y, show = True):
         result = self.image[int(self.loc[1] + min_y):int(self.loc[1] + max_y), int(self.loc[0] + min_x):int(self.loc[0] + max_x)]

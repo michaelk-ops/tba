@@ -25,7 +25,7 @@ def crypt(a):
         return False
     a.multi_block_color(140, 100, (48, 37, 130))
     a.multi_block_color(140, 100, (254, 74, 32))
-    if not a.random_multi():
+    if not a.central_multi():
         return False
     a.click()
     a.move(400, 0)
