@@ -175,6 +175,7 @@ class Automator:
             if not self.await_samples("map", 3):
                 return False
             self.click()
+            self.move(400, 0)
             if not self.await_samples("shop_loaded", 10):
                 return False
             pyautogui.press("esc")
