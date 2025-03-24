@@ -23,8 +23,8 @@ def crypt(a):
     a.move(400, 0)
     if not a.await_samples_multi(crypts, 4):
         return False
-    a.multi_block_color(120, 90, (48, 37, 130))
-    a.multi_block_color(120, 90, (254, 74, 32))
+    a.multi_block_color(140, 100, (48, 37, 130))
+    a.multi_block_color(140, 100, (254, 74, 32))
     if not a.random_multi():
         return False
     a.click()
