@@ -6,6 +6,7 @@ import argparse
 
 common_crypts = ["crypts/" + name for name in ["cave", "cog", "dune", "greek", "grotto", "ice", "lava", "rune", "skull", "snake", "temple", "pyramid"]]
 rare_crypts = ["crypts/" + name for name in ["left", "right"]]
+epic_crypts = ["crypts/" + name for name in ["darktree", "tomb", "labyrinth", "rock", "staired", "spike", "ring", "lighttree", "steppyramid", "epicpyramid", "redtree", "cathedral", "crystal", "palace", "pit", "scorpion"]]
 
 def crypt(a):
     if not a.await_samples("watchtower", 2):
@@ -20,7 +21,9 @@ def crypt(a):
     if not a.random_multi():
         return False
     a.click()
-    a.move(400, 0)
+    if not a.await_samples("logo", 2):
+        return False
+    a.move()
     if not a.await_samples_multi(crypts, 4):
         return False
     a.multi_block_color(140, 100, (48, 37, 130))
@@ -28,7 +31,9 @@ def crypt(a):
     if not a.central_multi():
         return False
     a.click()
-    a.move(400, 0)
+    if not a.await_samples("logo", 2):
+        return False
+    a.move()
     time.sleep(0.3)
     if not a.await_samples("carter_selected", 2):
         return False
@@ -65,6 +70,8 @@ crypt_type = args.type
 rare = False
 if crypt_type == "common":
     crypts = common_crypts
+elif crypt_type == "epic":
+    crypts = epic_crypts
 elif crypt_type == "rare":
     crypts = rare_crypts
     rare = True

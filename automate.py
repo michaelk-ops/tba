@@ -10,7 +10,7 @@ import math
 import random
 
 class Automator:
-    def __init__(self, scale = 1, threshold = 0.048, kill_file = os.path.expanduser("~/.tba_stop")):
+    def __init__(self, scale = 1, threshold = 0.051, kill_file = os.path.expanduser("~/.tba_stop")):
         self.kill_file = kill_file
         if os.path.exists(kill_file):
             os.remove(kill_file)
@@ -188,8 +188,10 @@ class Automator:
             if not self.await_samples("map", 3):
                 return False
             self.click()
-            self.move(400, 0)
             if not self.await_samples("shop_loaded", 10):
                 return False
             pyautogui.press("esc")
+            if not self.await_samples("logo", 2):
+                return False
+            self.move()
         return True
