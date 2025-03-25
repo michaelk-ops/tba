@@ -10,7 +10,7 @@ import math
 import random
 
 class Automator:
-    def __init__(self, scale = 1, threshold = 0.05, kill_file = os.path.expanduser("~/.tba_stop")):
+    def __init__(self, scale = 1, threshold = 0.048, kill_file = os.path.expanduser("~/.tba_stop")):
         self.kill_file = kill_file
         if os.path.exists(kill_file):
             os.remove(kill_file)
