@@ -123,6 +123,10 @@ class Automator:
         _, threshold = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
         return pytesseract.image_to_string(threshold, lang = "eng", config = "--psm 7").strip()
 
+    def mean(self, min_x, min_y, max_x, max_y):
+        cut = self.cut(min_x, min_y, max_x, max_y, False)
+        return tuple(map(float, reversed(numpy.mean(cut, axis = (0, 1)))))
+
     def click(self, xoffset = 0, yoffset = 0):
         pyautogui.click(self.loc[0] + xoffset, self.loc[1] + yoffset)
 
