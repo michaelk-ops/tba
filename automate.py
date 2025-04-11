@@ -10,7 +10,7 @@ import math
 import random
 
 class Automator:
-    def __init__(self, scale = 1, threshold = 0.053, kill_file = os.path.expanduser("~/.tba_stop")):
+    def __init__(self, scale = 1, threshold = 0.054, kill_file = os.path.expanduser("~/.tba_stop")):
         self.kill_file = kill_file
         if os.path.exists(kill_file):
             os.remove(kill_file)
@@ -175,10 +175,14 @@ class Automator:
         if not isinstance(samples, list):
             samples = [samples]
         def f(a):
+            result = []
             for sample in samples:
                 locs = a.find_multi(sample)
                 if locs is not None:
-                    return locs
+                    result += locs
+            if result:
+                self.multi = result
+                return result
             return None
         return self.loop(f, timeout)
 
