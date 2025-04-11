@@ -24,6 +24,7 @@ def crypt(a):
     if not a.await_samples("logo", 2):
         return False
     a.move()
+    time.sleep(0.3)
     if not a.await_samples_multi(crypts, 4):
         return False
     a.multi_block_color(140, 100, (48, 37, 130))
@@ -57,7 +58,7 @@ def speedup(a):
             return True
         for _ in range(6):
             a.click(360, 36)
-        time.sleep(2)
+        time.sleep(1.5)
         return True
     return False
 
