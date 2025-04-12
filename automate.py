@@ -186,10 +186,14 @@ class Automator:
             return None
         return self.loop(f, timeout)
 
-    def restart_game(self, worldmap = False):
+    def refresh(self):
         pyautogui.press("f5")
-        time.sleep(1)
-        if not self.await_samples("shop_loaded", 40):
+
+    def tab(self):
+        pyautogui.press("tab")
+
+    def start_game(self, worldmap = False):
+        if not self.await_samples("shop_loaded", 80):
             return False
         pyautogui.press("esc")
         if worldmap:
@@ -203,3 +207,8 @@ class Automator:
                 return False
             self.move()
         return True
+
+    def restart_game(self, worldmap = False):
+        self.refresh()
+        time.sleep(3)
+        self.start_game(worldmap)
