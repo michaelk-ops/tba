@@ -26,6 +26,12 @@ In particular, it may not be one of the same level.
 
 ## Chest Counter
 
-This is an experimental implementation that has not been tested in production.
+The `chest_counter.py` script is an experimental chest counter implementation that has not been tested in production.
 For each chest counted it outputs a JSON object on a single line, which can be processed by other software.
 It will also regularly click the help button.
+
+## Login
+
+The `login.py` script will automatically login given a JSON file containing an object with `"username"` and `"password"` keys.
+The idea was that this could be combined with other scripts to fully automate workflows running in for instance Xvfb, which would then allow multiple sessions on the same machine.
+This concept could use some further thought and convenience scripts, which I may or may not add here later.
