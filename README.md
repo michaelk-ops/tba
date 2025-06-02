@@ -29,6 +29,7 @@ In particular, it may not be one of the same level.
 The `troops.py` script should be executed while on the troop selection window ahead of an attack.
 It must be provided with the location of a JSON file that contains an object with unit names as its keys and numbers as its values.
 The available unit names correspond to the images in the `samples/units/` directory.
+Note that most lower level units are currently missing.
 
 ## Chest Counter
 
