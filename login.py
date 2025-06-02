@@ -6,9 +6,9 @@ import json
 import argparse
 
 def login(a, username, password):
-    if not a.await_samples("login", 10):
+    if not a.await_samples("next", 10):
         return False
-    a.click()
+    a.click(30, -180)
     time.sleep(2)
     if not a.await_samples("email", 2):
         return False
