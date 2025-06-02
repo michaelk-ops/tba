@@ -24,6 +24,12 @@ It will also refuse to march on any rare crypts that are already opened.
 Note that the crypt actually marched on may not be the one that was originally selected via the watchtower.
 In particular, it may not be one of the same level.
 
+## Troop Selection
+
+The `troops.py` script should be executed while on the troop selection window ahead of an attack.
+It must be provided with the location of a JSON file that contains an object with unit names as its keys and numbers as its values.
+The available unit names correspond to the images in the `samples/units/` directory.
+
 ## Chest Counter
 
 The `chest_counter.py` script is an experimental chest counter implementation that has not been tested in production.
